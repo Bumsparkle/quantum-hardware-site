@@ -1,6 +1,282 @@
 <!DOCTYPE html>
-<html>
-<body>
-  <h1> Hello World </h1>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Hardware Physics Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Main background color, slightly lighter dark gray */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1e2124; /* Less dark, achieving the gray aesthetic */
+            color: #f0f6fc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid #f0f6fc; /* Changed from blue accent */
+            color: #ffffff; /* Bright white accent */
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        /* Styling for the embedded visual container (Spline ready) */
+        #visual-container {
+            width: 100%;
+            height: 60vh; /* Increased height for prominence */
+            background-color: #010409; /* Very deep dark frame for contrast, like the image */
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative; /* Needed for positioning interactive points */
+        }
+        /* Style for the clickable points (Monochromatic) */
+        .interactive-point {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(240, 246, 252, 0.15); /* Gray transparent */
+            border: 2px solid #f0f6fc; /* Bright gray border */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f0f6fc;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 20;
+        }
+        .interactive-point:hover {
+            background-color: #f0f6fc; /* Hover to solid bright gray */
+            color: #1e2124; /* Text turns dark */
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="max-w-6xl w-full mx-auto">
+        
+        <!-- 1. Header/Title (Changed to Bright Gray) -->
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-extrabold text-[#f0f6fc] mb-2">
+                Quantum Hardware Physics Visualizer
+            </h1>
+            <p class="text-lg text-gray-400">
+                Extracurricular Project | MSc Quantum Technologies (CS Focus)
+            </p>
+        </header>
+
+        <!-- 2. Tab Navigation -->
+        <nav class="border-b border-[#30363d] mb-6">
+            <div class="flex flex-wrap justify-start gap-4 text-gray-400 font-medium text-lg">
+                <button class="tab-button active px-3 pb-2 transition-colors duration-150" data-target="superconducting">Superconducting Qubits</button>
+                <button class="tab-button px-3 pb-2 transition-colors duration-150" data-target="trapped-ion">Trapped Ion Qubits</button>
+                <button class="tab-button px-3 pb-2 transition-colors duration-150" data-target="photonic">Photonic Qubits</button>
+                <button class="tab-button px-3 pb-2 transition-colors duration-150" data-target="neutral-atom">Neutral Atom Qubits</button>
+                <button class="tab-button px-3 pb-2 transition-colors duration-150" data-target="nv-center">NV Center Qubits</button>
+            </div>
+        </nav>
+
+        <!-- 3. Visualization Frame (Spline Embed Area) -->
+        <div id="visual-container">
+            <!-- Placeholder for Spline/Three.js content -->
+            
+            <!-- Dynamic interactive points for Superconducting Qubits demo -->
+            <div id="interactive-points-container" class="w-full h-full relative">
+                <div class="text-center pt-36 text-gray-500">
+                    <p>3D/2D Interactive Model Goes Here</p>
+                    <p class="text-sm mt-2">If using Spline, replace this container's content with the iframe embed.</p>
+                </div>
+
+                <!-- Example Interactive Points (Overlayed on the model) -->
+                <div class="interactive-point" style="top: 20%; left: 80%;" data-point="1">1</div>
+                <div class="interactive-point" style="top: 50%; left: 40%;" data-point="2">2</div>
+                <div class="interactive-point" style="top: 60%; left: 55%;" data-point="3">3</div>
+                <div class="interactive-point" style="top: 35%; left: 65%;" data-point="4">4</div>
+                <div class="interactive-point" style="top: 80%; left: 30%;" data-point="5">5</div>
+            </div>
+        </div>
+        
+        <!-- 4. Content Sections (Detailed Descriptions) -->
+        <div id="tab-content" class="mt-6">
+            <!-- 1. Superconducting Qubits Content -->
+            <div id="superconducting" class="content-section active">
+                <h2 class="text-2xl font-bold text-white mb-3">Superconducting Qubits: Physics Detail</h2>
+                <div class="space-y-4 text-gray-300">
+                    <p>Superconducting qubits rely on the **Josephson effect** to create an artificial two-level system. The entire circuit is cooled to millikelvin temperatures (below $0.01\text{ K}$) to achieve zero resistance, allowing coherent quantum behavior.</p>
+                    
+                    <div id="detail-point-1" class="hidden bg-[#30363d] p-4 rounded-lg border-l-4 border-[#f0f6fc]">
+                        <h3 class="font-semibold text-[#f0f6fc]">Point 1: Cryogenic Boundary (Isolation)</h3>
+                        <p class="text-sm mt-1">
+                            The qubit must be isolated at **millikelvin temperatures** ($\approx 15 \text{ mK}$) to prevent **thermal decoherence**. This boundary ensures the environment cannot prematurely collapse the quantum state.
+                        </p>
+                    </div>
+                    
+                    <div id="detail-point-2" class="hidden bg-[#30363d] p-4 rounded-lg border-l-4 border-[#f0f6fc]">
+                        <h3 class="font-semibold text-[#f0f6fc]">Point 2: Coaxial Control Line (Microwave Input)</h3>
+                        <p class="text-sm mt-1">
+                            This line delivers the **microwave pulse**, a classical signal tuned precisely to the qubit's **transition frequency**, which dictates the application of quantum gates.
+                        </p>
+                    </div>
+
+                    <div id="detail-point-3" class="hidden bg-[#30363d] p-4 rounded-lg border-l-4 border-[#f0f6fc]">
+                        <h3 class="font-semibold text-[#f0f6fc]">Point 3: Qubit Circuit (Artificial Atom)</h3>
+                        <p class="text-sm mt-1">
+                            The large superconducting loop acts as an **LC resonator**. Its electrical properties are engineered to make it behave like a quantum harmonic oscillator with two defined energy levels ($\left|0\right\rangle$ and $\left|1\right\rangle$).
+                        </p>
+                    </div>
+
+                    <div id="detail-point-4" class="hidden bg-[#30363d] p-4 rounded-lg border-l-4 border-[#f0f6fc]">
+                        <h3 class="font-semibold text-[#f0f6fc]">Point 4: Josephson Junction (Anharmonicity)</h3>
+                        <p class="text-sm mt-1">
+                            The **Josephson Junction** is the key non-linear element. It introduces **anharmonicity** that ensures the energy gap between the $\left|0\right\rangle$ and $\left|1\right\rangle$ states is unique, preventing unintentional excitation to higher states (like $\left|2\right\rangle$) during gate operations.
+                        </p>
+                    </div>
+
+                    <div id="detail-point-5" class="hidden bg-[#30363d] p-4 rounded-lg border-l-4 border-[#f0f6fc]">
+                        <h3 class="font-semibold text-[#f0f6fc]">Point 5: State Vector (Bloch Sphere Abstraction)</h3>
+                        <p class="text-sm mt-1">
+                            An abstract visualization (like the Bloch Sphere) shows the qubit's state ($\left|\psi\right\rangle = \alpha\left|0\right\rangle + \beta\left|1\right\rangle$) moving from the North Pole to the Equator during a Hadamard operation, demonstrating **superposition** and **phase** control.
+                        </p>
+                    </div>
+                    <p>Click on the numbered circles in the dark box above to see detailed explanations of the physics behind each component.</p>
+                </div>
+            </div>
+
+            <!-- 2. Trapped Ion Qubits Content -->
+            <div id="trapped-ion" class="content-section">
+                <h2 class="text-2xl font-bold text-white mb-3">Trapped Ion Qubits: Physics Detail</h2>
+                <div class="space-y-4 text-gray-300">
+                    <p>Trapped-ion systems use individual, charged atoms suspended in a vacuum by **electromagnetic fields**. The qubits are the internal electronic energy levels of the ions, offering long coherence times.</p>
+                    <p>Two-qubit gates are implemented by coupling the internal state of the ion to its **collective motional modes** (phonons), which is precisely controlled by focused laser beams.</p>
+                </div>
+            </div>
+
+            <!-- 3. Photonic Qubits Content -->
+            <div id="photonic" class="content-section">
+                <h2 class="text-2xl font-bold text-white mb-3">Photonic Qubits: Physics Detail</h2>
+                <div class="space-y-4 text-gray-300">
+                    <p>Photons are ideal qubits because they naturally operate at room temperature and don't decohere easily. Information is often encoded in the photon's polarization or path.</p>
+                    <p>Gates rely on **linear optics**—mirrors and **beam splitters**—to achieve superposition. The challenge lies in creating deterministic two-qubit gates, which requires probabilistic methods or extremely strong non-linear interactions.</p>
+                </div>
+            </div>
+
+            <!-- 4. Neutral Atom Qubits Content -->
+            <div id="neutral-atom" class="content-section">
+                <h2 class="text-2xl font-bold text-white mb-3">Neutral Atom Qubits: Physics Detail</h2>
+                <div class="space-y-4 text-gray-300">
+                    <p>Neutral atoms are held in place by highly focused **optical tweezers** (laser beams). These systems are highly scalable, often organized in large 2D arrays.</p>
+                    <p>Interactions for two-qubit gates are based on the **Rydberg Blockade**. When one atom is excited to a high-energy **Rydberg state**, it strongly shifts the energy levels of any nearby atom, preventing its excitation. This acts as a physical CNOT gate mechanism.</p>
+                </div>
+            </div>
+
+            <!-- 5. NV Center Qubits Content -->
+            <div id="nv-center" class="content-section">
+                <h2 class="text-2xl font-bold text-white mb-3">NV Center Qubits: Physics Detail</h2>
+                <div class="space-y-4 text-gray-300">
+                    <p>Nitrogen-Vacancy (NV) Centers are crystal defects in diamond. The qubit is the spin state of an electron or nucleus associated with this defect.</p>
+                    <p>This system operates at room temperature and is useful for quantum sensing. **Optically initializing** the spin state (using green laser light) and **reading it out** (detecting fluorescence) are key physical processes used to prepare and measure the qubit.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const visualContainer = document.getElementById('visual-container');
+            
+            // Collect all detail boxes for easy toggling
+            const detailBoxes = document.querySelectorAll('#tab-content [id^="detail-point-"]');
+
+            // Function to handle tab switching
+            function switchTab(targetId) {
+                // 1. Manage Active Tabs/Content
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                const activeBtn = document.querySelector(`.tab-button[data-target="${targetId}"]`);
+                const activeContent = document.getElementById(targetId);
+
+                if (activeBtn) activeBtn.classList.add('active');
+                if (activeContent) activeContent.classList.add('active');
+
+                // 2. Manage Visualization Area (Spline/Three.js Logic)
+                const isSuperconducting = targetId === 'superconducting';
+
+                // We must dynamically reload the content for the interactive points to work properly
+                visualContainer.innerHTML = `
+                    <div id="interactive-points-container" class="w-full h-full relative">
+                        <div class="text-center pt-36 text-gray-500">
+                            <p>3D/2D Interactive Model for ${targetId.toUpperCase().replace('-', ' ')} Goes Here</p>
+                            <p class="text-sm mt-2">Replace this content with your Spline iframe or Three.js canvas setup.</p>
+                        </div>
+                        
+                        ${isSuperconducting ? `
+                            <!-- Interactive Points for Superconducting Demo -->
+                            <div class="interactive-point" style="top: 20%; left: 80%;" data-point="1">1</div>
+                            <div class="interactive-point" style="top: 50%; left: 40%;" data-point="2">2</div>
+                            <div class="interactive-point" style="top: 60%; left: 55%;" data-point="3">3</div>
+                            <div class="interactive-point" style="top: 35%; left: 65%;" data-point="4">4</div>
+                            <div class="interactive-point" style="top: 80%; left: 30%;" data-point="5">5</div>
+                        ` : ''}
+                    </div>
+                `;
+
+                // 3. Re-add listeners and manage detail boxes
+                if (isSuperconducting) {
+                    detailBoxes.forEach(box => box.classList.add('hidden'));
+                    addPointListeners();
+                }
+            }
+            
+            // Function to handle clicks on the numbered points
+            function handlePointClick(event) {
+                const pointNumber = event.target.getAttribute('data-point');
+                const targetDetailId = `detail-point-${pointNumber}`;
+                
+                // Hide all detail boxes first
+                detailBoxes.forEach(box => box.classList.add('hidden'));
+
+                // Show the corresponding detail box
+                const targetDetail = document.getElementById(targetDetailId);
+                if (targetDetail) {
+                    targetDetail.classList.remove('hidden');
+                    // Scroll down to the detail section for visibility
+                    targetDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            function addPointListeners() {
+                // Attach listeners to the newly created interactive points
+                document.querySelectorAll('.interactive-point').forEach(point => {
+                    point.addEventListener('click', handlePointClick);
+                });
+            }
+
+            // Add initial click listeners to tabs
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    switchTab(targetId);
+                });
+            });
+
+            // Initialize the first tab and listeners
+            switchTab('superconducting');
+        });
+    </script>
+
 </body>
 </html>
+
